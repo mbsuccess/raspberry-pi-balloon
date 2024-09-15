@@ -5,8 +5,8 @@ import RPi.GPIO as GPIO
 
 # Setup GPIO
 GPIO.setmode(GPIO.BCM)
-led_pin_up = 17  # LED for temperature increasing (GPIO17)
-led_pin_down = 18  # LED for temperature decreasing (GPIO18)
+led_pin_up = 18  # LED for temperature increasing (was GPIO17, now GPIO18)
+led_pin_down = 17  # LED for temperature decreasing (was GPIO18, now GPIO17)
 GPIO.setup(led_pin_up, GPIO.OUT)
 GPIO.setup(led_pin_down, GPIO.OUT)
 
@@ -39,33 +39,43 @@ def read_temp():
 # Variable to store the last temperature
 last_temp = None
 
-# Main loop to continuously read temperature, detect changes, and control LEDs
-while True:
-    current_temp = read_temp()
+try:
+    # Main loop to continuously read temperature, detect changes, and control LEDs
+    while True:
+        current_temp = read_temp()
 
-    if last_temp is not None:
-        if current_temp > last_temp:
-            # Temperature is going up
-            GPIO.output(led_pin_up, GPIO.HIGH)   # Turn on LED for increasing temp
-            GPIO.output(led_pin_down, GPIO.LOW)  # Turn off LED for decreasing temp
-            print(f"Temperature is rising: {current_temp:.2f}°C")
-        elif current_temp < last_temp:
-            # Temperature is going down
-            GPIO.output(led_pin_up, GPIO.LOW)    # Turn off LED for increasing temp
-            GPIO.output(led_pin_down, GPIO.HIGH) # Turn on LED for decreasing temp
-            print(f"Temperature is falling: {current_temp:.2f}°C")
-        else:
-            # Temperature is constant (Optional: you can decide to turn both LEDs off)
-            GPIO.output(led_pin_up, GPIO.LOW)
-            GPIO.output(led_pin_down, GPIO.LOW)
-            print(f"Temperature is constant: {current_temp:.2f}°C")
+        if last_temp is not None:
+            if current_temp > last_temp:
+                # Temperature is going up
+                GPIO.output(led_pin_up, GPIO.HIGH)   # Turn on LED for increasing temp (now GPIO18)
+                GPIO.output(led_pin_down, GPIO.LOW)  # Turn off LED for decreasing temp (now GPIO17)
+                print(f"Temperature is rising: {current_temp:.2f}°C")
+            elif current_temp < last_temp:
+                # Temperature is going down
+                GPIO.output(led_pin_up, GPIO.LOW)    # Turn off LED for increasing temp (now GPIO18)
+                GPIO.output(led_pin_down, GPIO.HIGH) # Turn on LED for decreasing temp (now GPIO17)
+                print(f"Temperature is falling: {current_temp:.2f}°C")
+            else:
+                # Temperature is constant (Optional: you can decide to turn both LEDs off)
+                GPIO.output(led_pin_up, GPIO.LOW)
+                GPIO.output(led_pin_down, GPIO.LOW)
+                print(f"Temperature is constant: {current_temp:.2f}°C")
 
-    # Update the last temperature value
-    last_temp = current_temp
+        # Update the last temperature value
+        last_temp = current_temp
 
-    # Wait before reading the temperature again
-    time.sleep(1)
+        # Wait before reading the temperature again
+        time.sleep(1)
 
-# Cleanup GPIO on exit (use try-except to handle cleanup if needed)
-GPIO.cleanup()
+except KeyboardInterrupt:
+    pass  # Handle any interruption, such as pressing Ctrl+C
+
+finally:
+    # Wait for the user to press Enter to close the script
+    input("Press Enter to exit and clean up GPIO...")
+
+    # Cleanup GPIO to reset all GPIO pins
+    GPIO.cleanup()
+    print("GPIO cleaned up.")
+    
     
