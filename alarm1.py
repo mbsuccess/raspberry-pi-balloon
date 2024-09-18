@@ -14,7 +14,7 @@ try:
     print("GPIO" + str(gpio_pin) +" is ON")
     
     # Wait for 0.1 seconds
-    time.sleep(20)
+    time.sleep(5)
     
     # Turn GPIO23 OFF (LOW)
     GPIO.output(gpio_pin, GPIO.LOW)
