@@ -3,7 +3,7 @@ import time
 
 # Setup GPIO
 GPIO.setmode(GPIO.BCM)  # Use BCM pin numbering
-gpio_pin = 25           # GPIO25
+gpio_pin = 4           # GPIO25
 
 # Setup GPIO pin as output
 GPIO.setup(gpio_pin, GPIO.OUT)
