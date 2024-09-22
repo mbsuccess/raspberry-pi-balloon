@@ -8,7 +8,7 @@ def meters_to_feet(meters):
 
 # Initialize GPIO settings
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(4, GPIO.OUT)  # GPIO 4 for rising altitude
+GPIO.setup(23, GPIO.OUT)  # GPIO 4 for rising altitude
 GPIO.setup(17, GPIO.OUT)  # GPIO 17 for falling altitude
 
 # Function to blink LED
@@ -45,7 +45,7 @@ try:
                 if altitude_difference > 0:
                     print(f"Rose {altitude_difference:.2f} feet")
                     print("Blinking LED on GPIO 4")  # Debugging statement
-                    blink_led(4, 3)  # Blink LED on GPIO 4 for 3 cycles
+                    blink_led(23, 3)  # Blink LED on GPIO 4 for 3 cycles
                 elif altitude_difference < 0:
                     print(f"Fell {-altitude_difference:.2f} feet")
                     print("Blinking LED on GPIO 17")  # Debugging statement
