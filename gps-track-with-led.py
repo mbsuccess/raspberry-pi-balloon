@@ -44,9 +44,11 @@ try:
                 altitude_difference = current_altitude_feet - previous_altitude_feet
                 if altitude_difference > 0:
                     print(f"Rose {altitude_difference:.2f} feet")
+                    print("Blinking LED on GPIO 4")  # Debugging statement
                     blink_led(4, 3)  # Blink LED on GPIO 4 for 3 cycles
                 elif altitude_difference < 0:
                     print(f"Fell {-altitude_difference:.2f} feet")
+                    print("Blinking LED on GPIO 17")  # Debugging statement
                     blink_led(17, 3)  # Blink LED on GPIO 17 for 3 cycles
                 else:
                     print("Altitude unchanged")
