@@ -15,14 +15,19 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(24, GPIO.OUT)  # GPIO 24 for rising
 GPIO.setup(23, GPIO.OUT)  # GPIO 23 for falling
 
-# Ensure both LEDs are off at the start
+# Ensure both LEDs are ON at the start
+print("now both ON")
+GPIO.output(24, GPIO.HIGH)
+GPIO.output(23, GPIO.HIGH)
+time.sleep(2)
+print("no both off")
 GPIO.output(24, GPIO.LOW)
 GPIO.output(23, GPIO.LOW)
 
 # Function to handle LED status based on altitude changes
 def handle_led_status(rising, falling):
     if rising:
-        GPIO.output(44, GPIO.HIGH)  # Light up GPIO24 (Rising)
+        GPIO.output(24, GPIO.HIGH)  # Light up GPIO24 (Rising)
         print("gpio4 ON, now setting gpio23 off")
         GPIO.output(23, GPIO.LOW)  # Turn off GPIO23
     elif falling:
