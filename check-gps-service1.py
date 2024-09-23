@@ -12,26 +12,26 @@ def calculate_time_difference(previous_time_str, current_time_str):
 
 # Setup GPIO pins for rising and falling indicators
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(4, GPIO.OUT)  # GPIO 4 for rising
+GPIO.setup(24, GPIO.OUT)  # GPIO 24 for rising
 GPIO.setup(23, GPIO.OUT)  # GPIO 23 for falling
 
 # Ensure both LEDs are off at the start
-GPIO.output(4, GPIO.LOW)
+GPIO.output(24, GPIO.LOW)
 GPIO.output(23, GPIO.LOW)
 
 # Function to handle LED status based on altitude changes
 def handle_led_status(rising, falling):
     if rising:
-        GPIO.output(4, GPIO.HIGH)  # Light up GPIO4 (Rising)
+        GPIO.output(44, GPIO.HIGH)  # Light up GPIO24 (Rising)
         print("gpio4 ON, now setting gpio23 off")
         GPIO.output(23, GPIO.LOW)  # Turn off GPIO23
     elif falling:
-        GPIO.output(4, GPIO.LOW)   # Turn off GPIO4
+        GPIO.output(24, GPIO.LOW)   # Turn off GPIO24
         print("gpio4 OFF, now setting gpio23 ON")
         GPIO.output(23, GPIO.HIGH) # Light up GPIO23 (Falling)
     else:
-        GPIO.output(4, GPIO.LOW)   # Turn off both LEDs
-        GPIO.output(23, GPIO.LOW)
+        GPIO.output(24, GPIO.HIGH)   # Turn on both LEDs
+        GPIO.output(23, GPIO.HIGH)
         print("both GPIOs off")
 
 # Main function to check GPS service
