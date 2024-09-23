@@ -23,13 +23,16 @@ GPIO.output(23, GPIO.LOW)
 def handle_led_status(rising, falling):
     if rising:
         GPIO.output(4, GPIO.HIGH)  # Light up GPIO4 (Rising)
+        print("gpio4 ON, now setting gpio23 off")
         GPIO.output(23, GPIO.LOW)  # Turn off GPIO23
     elif falling:
         GPIO.output(4, GPIO.LOW)   # Turn off GPIO4
+        print("gpio4 OFF, now setting gpio23 ON")
         GPIO.output(23, GPIO.HIGH) # Light up GPIO23 (Falling)
     else:
         GPIO.output(4, GPIO.LOW)   # Turn off both LEDs
         GPIO.output(23, GPIO.LOW)
+        print("both GPIOs off")
 
 # Main function to check GPS service
 def check_gps_service():
