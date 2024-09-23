@@ -10,9 +10,13 @@ app = Flask(__name__)
 gps_data = {
     "latitude": None,
     "longitude": None,
-    "altitude": None,
+    "altitude": None,  # Altitude will now be in feet
     "lastFetch": None
 }
+
+# Function to convert meters to feet
+def meters_to_feet(meters):
+    return meters * 3.28084
 
 # Function to update GPS data
 def update_gps_data():
@@ -28,7 +32,8 @@ def update_gps_data():
                 gps_data["latitude"] = report.lat
                 gps_data["longitude"] = report.lon
             if hasattr(report, 'altMSL'):
-                gps_data["altitude"] = report.altMSL
+                altitude_meters = report.altMSL
+                gps_data["altitude"] = meters_to_feet(altitude_meters)  # Convert to feet
 
             # Update the last fetch timestamp
             gps_data["lastFetch"] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
