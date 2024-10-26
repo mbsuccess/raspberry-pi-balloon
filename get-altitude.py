@@ -5,7 +5,7 @@ import time
 BARO_ADDRESS = 0x77
 
 # Define barometer registers
-PRESS_OUT_XL = 0x28
+PRESS_OUT_XL = 0x28 | 0x80  # The 0x80 is to enable auto-increment
 PRESS_OUT_L = 0x29
 PRESS_OUT_H = 0x2A
 CTRL_REG1 = 0x20
@@ -13,21 +13,20 @@ CTRL_REG1 = 0x20
 # Initialize I2C (SMBus 1)
 bus = smbus2.SMBus(1)
 
-# Enable the barometer by setting CTRL_REG1
-# 0x90 enables the barometer at 12.5Hz output rate
+# Enable the barometer by setting CTRL_REG1 (0x90 enables at 12.5Hz)
 bus.write_byte_data(BARO_ADDRESS, CTRL_REG1, 0x90)
 
 # Function to read raw pressure data from the sensor
 def read_pressure():
     # Read the three pressure output registers
-    xl = bus.read_byte_data(BARO_ADDRESS, PRESS_OUT_XL)
-    l = bus.read_byte_data(BARO_ADDRESS, PRESS_OUT_L)
-    h = bus.read_byte_data(BARO_ADDRESS, PRESS_OUT_H)
+    data = bus.read_i2c_block_data(BARO_ADDRESS, PRESS_OUT_XL, 3)
+    raw_pressure = (data[2] << 16) | (data[1] << 8) | data[0]
 
-    # Combine the registers into a single 24-bit value
-    raw_pressure = (h << 16) | (l << 8) | xl
+    # Handle possible signed 24-bit value
+    if raw_pressure & 0x800000:  # if the sign bit is set (negative number)
+        raw_pressure -= 1 << 24
 
-    # Convert raw pressure to Pa (assuming standard calibration)
+    # Convert raw pressure to hPa
     pressure = raw_pressure / 4096.0  # Convert to hPa
     return pressure
 
@@ -42,5 +41,4 @@ while True:
     pressure = read_pressure()
     altitude = calculate_altitude(pressure)
     print(f"Pressure: {pressure:.2f} hPa, Altitude: {altitude:.2f} meters")
-    time.sleep(1)  # Delay 1 second between readings
-
+    time.sleep(3)  # Delay 3 second between readings
