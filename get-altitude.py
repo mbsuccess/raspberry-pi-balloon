@@ -2,7 +2,7 @@
 import time
 import smbus
 
-print ("starting script 4")
+print ("this is crap")
 
 class BMP388:
     def __init__(self, address=0x77):
